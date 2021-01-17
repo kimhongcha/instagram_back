@@ -2,6 +2,7 @@ package com.example.demo.domain.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="feed")
@@ -21,7 +22,9 @@ public class FeedEntity {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private Long author;
+    @OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name="post_id")
+    private List<CommentEntity> comments;
+
 
 }
