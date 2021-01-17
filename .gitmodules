@@ -1,0 +1,3 @@
+[submodule "src/instagram_front"]
+	path = src/instagram_front
+	url = https://github.com/kimhongcha/instagram_front.git
