@@ -15,6 +15,6 @@ public class CommentEntity {
     private String comment;
 
     @Column
-    private LocalDateTime regDate;
+    private LocalDateTime createdAt;
 
 }
