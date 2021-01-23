@@ -11,10 +11,14 @@ public class CommentEntity {
     @Column
     private Long id;
 
+    @Column(name="post_id")
+    private Long postId;
+
+
     @Column
     private String comment;
 
-    @Column
+    @Column(name="created_at")
     private LocalDateTime createdAt;
 
 }

@@ -1,2 +1,4 @@
-package com.example.demo.domain.repository;public class FeedRepository {
+package com.example.demo.domain.repository;
+
+public class FeedRepository {
 }

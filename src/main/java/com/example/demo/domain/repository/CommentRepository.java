@@ -1,2 +1,4 @@
-package com.example.demo.domain.repository;public class CommentRepository {
+package com.example.demo.domain.repository;
+
+public class CommentRepository {
 }

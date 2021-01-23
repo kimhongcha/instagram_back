@@ -13,6 +13,9 @@ public class FeedEntity {
     @Column
     private Long id;
 
+    @Column(name="user_id")
+    private Long userId;
+
     @Column(length = 200)
     private String content;
 
