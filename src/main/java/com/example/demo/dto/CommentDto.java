@@ -1,2 +1,4 @@
-package com.example.demo.dto;public class CommentDto {
+package com.example.demo.dto;
+
+public class CommentDto {
 }

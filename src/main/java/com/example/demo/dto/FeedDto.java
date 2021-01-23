@@ -1,2 +1,4 @@
-package com.example.demo.dto;public class FeedDto {
+package com.example.demo.dto;
+
+public class FeedDto {
 }
