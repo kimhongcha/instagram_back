@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -21,15 +22,16 @@ public class CommentService {
     private FeedRepository feedRepository;
 
 
-    public void uploadComment(CommentDto commentDto) {
-        commentDto.setCreatedAt(new Date());
+    public void createComment(CommentDto commentDto) {
 
-        this.commentRepository.save(commentDto.toEntity());
+        commentDto.setCreatedAt(LocalDateTime.now());
+        return this.commentRepository.save(commentDto.toEntity());
     }
 
 
     @Transactional
     public void deleteById(Long id) {
+
         commentRepository.deleteById(id);
     }
 

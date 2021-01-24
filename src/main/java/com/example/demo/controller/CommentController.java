@@ -1,4 +1,31 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.CommentDto;
+import com.example.demo.service.CommentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/comment")
 public class CommentController {
+
+    @Autowired
+    CommentService commentService;
+
+    @PostMapping("/create")
+    private Long createComment(CommentDto commentDto) {
+        Long id = commentDto.getPostId();
+        commentService.createComment(commentDto);
+
+        return id;
+    }
+
+    @DeleteMapping(value="/{id}")
+    public Long deleteComment(@PathVariable("id") Long id){
+        Long pid = commentService.getPostIdByCommentId(id);
+        commensService.deleteOne(id);
+
+        return pid;
+    }
+
 }
