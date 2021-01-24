@@ -1,5 +1,6 @@
 package com.example.demo.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name="comment")
-public class CommentEntity {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -28,4 +29,11 @@ public class CommentEntity {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @Builder
+    public Comment(Long id, Long postId, String comment, LocalDateTime createdAt) {
+        this.id = id;
+        this.postId = postId;
+        this.comment = comment;
+        this.createdAt = createdAt;
+    }
 }

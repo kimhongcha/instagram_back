@@ -22,8 +22,8 @@ public class CommentController {
 
     @DeleteMapping(value="delete/{id}")
     public Long deleteComment(@PathVariable("id") Long id){
-        Long pid = commentService.getPostIdByCommentId(id);
-        commensService.deleteOne(id);
+        Long pid = new Long(1);//ommentService.getPostIdByCommentId(id);
+        //commentService.deleteOne(id);
 
         return pid;
     }

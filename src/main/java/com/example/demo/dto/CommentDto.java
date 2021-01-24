@@ -1,11 +1,14 @@
 package com.example.demo.dto;
 
-import com.example.demo.domain.entity.CommentEntity;
+import com.example.demo.domain.entity.Comment;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class CommentDto {
     private Long id;
 
@@ -23,8 +26,8 @@ public class CommentDto {
         this.createdAt = createdAt;
     }
 
-    public toEntity() {
-        return CommentEntity.builder()
+    public Comment toEntity() {
+        return Comment.builder()
                 .comment(this.comment)
                 .postId(this.postId)
                 .build();

@@ -11,6 +11,7 @@ import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,14 +37,14 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-//	@JsonIgnore
-//	@OneToMany(mappedBy = "member")
-//	private List<Board> boards = new ArrayList<>();
-//
-//	@JsonIgnore
-//	@OneToMany(mappedBy = "member")
-//	private List<Comment> comments = new ArrayList<>();
-//
+	@OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name="user_id")
+	private List<Feed> boards = new ArrayList<>();
+
+	@OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name="user_id")
+	private List<Comment> comments = new ArrayList<>();
+
 //	@JsonIgnore
 //	@OneToMany(mappedBy = "member")
 //	private List<Event> events = new ArrayList<>();
@@ -53,7 +54,6 @@ public class Member extends BaseTimeEntity {
 		this.email = email;
 		this.password = password;
 		this.name = name;
-		this.role = role;
 	}
 
 	public void encodingPassword(String password){

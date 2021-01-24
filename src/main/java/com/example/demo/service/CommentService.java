@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.entity.CommentEntity;
-import com.example.demo.domain.entity.FeedEntity;
+import com.example.demo.domain.entity.Comment;
+import com.example.demo.domain.entity.Feed;
 import com.example.demo.domain.repository.CommentRepository;
 import com.example.demo.domain.repository.FeedRepository;
 import com.example.demo.dto.CommentDto;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class CommentService {
@@ -22,7 +21,7 @@ public class CommentService {
     private FeedRepository feedRepository;
 
 
-    public void createComment(CommentDto commentDto) {
+    public Comment createComment(CommentDto commentDto) {
 
         commentDto.setCreatedAt(LocalDateTime.now());
         return this.commentRepository.save(commentDto.toEntity());
@@ -36,12 +35,12 @@ public class CommentService {
     }
 
     public void deleteAllByFeedId(Long id) {
-        FeedEntity feed = feedRepository.getOne(id);
+        Feed feed = feedRepository.getOne(id);
         commentRepository.deleteAll(feed.getComments());
     }
 
     public Long getFeedIdByCommentId(Long id) {
-        CommentEntity commentEntity = commentRepository.getOne(id);
+        Comment commentEntity = commentRepository.getOne(id);
 
         return commentEntity.getPostId();
     }

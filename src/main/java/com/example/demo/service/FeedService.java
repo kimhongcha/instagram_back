@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.entity.CommentEntity;
-import com.example.demo.domain.entity.FeedEntity;
-import com.example.demo.domain.entity.MemberEntity;
+import com.example.demo.domain.entity.Comment;
+import com.example.demo.domain.entity.Feed;
+import com.example.demo.domain.entity.Member;
 import com.example.demo.domain.repository.FeedRepository;
+import com.example.demo.domain.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,34 +18,37 @@ public class FeedService {
     FeedRepository feedRepository;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     CommentService commentService;
 
-    public FeedEntity getOne(Long id){
+    public Feed getOne(Long id){
         return this.feedRepository.getOne(id);
     }
 
     public String findAuthorByid(Long id){
-        MemberEntity member= memberRepository.getOne(id);
-        return member.getNickname();
+        Member member= memberRepository.getOne(id);
+        return member.getName();
     }
 
-    public List<CommentEntity> findComments(Long id){
-        FeedEntity feed = feedRepository.getOne(id);
+    public List<Comment> findComments(Long id){
+        Feed feed = feedRepository.getOne(id);
         return feed.getComments();
     }
 
-    public List<FeedEntity> findAllPost(){
+    public List<Feed> findAllPost(){
         return feedRepository.findAll();
     }
 
     
-    public List<FeedEntity> findAllPostByAuthor(Long id){
+    public List<Feed> findAllPostByAuthor(Long id){
         return feedRepository.findByAuthor(id);
     }
 
     @Transactional
     public void deleteOne(Long id){
-        commentService.deleteAllByPostId(id); //post에 딸린 comments 먼저 지우
+        //commentService.deleteAllByPostId(id); //post에 딸린 comments 먼저 지우
         String filename = feedRepository.getOne(id).getImage();
 
         /**
