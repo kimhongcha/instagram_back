@@ -37,7 +37,7 @@ public class FeedService {
         return feedRepository.findAll();
     }
 
-
+    
     public List<FeedEntity> findAllPostByAuthor(Long id){
         return feedRepository.findByAuthor(id);
     }
@@ -45,7 +45,7 @@ public class FeedService {
     @Transactional
     public void deleteOne(Long id){
         commentService.deleteAllByPostId(id); //post에 딸린 comments 먼저 지우
-        String filename=feedRepository.getOne(id).getImage();
+        String filename = feedRepository.getOne(id).getImage();
 
         /**
          *  파일 삭제 기능 구현
