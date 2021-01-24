@@ -7,6 +7,7 @@ import com.example.demo.dto.MemberResponseDto;
 import com.example.demo.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -14,11 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/login")
-public class MemberController {
+public class MemberController{
 
 	private MemberService memberService;
 
@@ -26,6 +25,7 @@ public class MemberController {
 	public ResponseEntity errorHandler(IllegalArgumentException e){
 		return ResponseEntity.badRequest().body(e);
 	}
+
 	// 회원가입
 	@PostMapping("/join")
 	public ResponseEntity joinMember(@RequestBody @Valid MemberDto dto, Errors erros){
@@ -44,8 +44,5 @@ public class MemberController {
 		MemberResponseDto dto = memberService.findByEmail(email);
 		return ResponseEntity.ok(dto);
 	}
-
-
-
 
 }
