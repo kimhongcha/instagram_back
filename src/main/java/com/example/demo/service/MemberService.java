@@ -9,6 +9,7 @@ import com.example.demo.dto.MemberResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -32,36 +34,65 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService implements UserDetailsService {
 
+	@Autowired
 	private MemberRepository memberRepository;
-	private PasswordEncoder passwordEncoder;
 
-	@Transactional
-	public Long save(MemberDto dto){
-		makeLowerCaseEmail(dto);
-		validateDuplicateMember(dto.getEmail());
-		Member member = dto.toEntity();
-		member.encodingPassword(passwordEncoder.encode(member.getPassword()));
-		return memberRepository.save(member).getId();
-	}
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	private void makeLowerCaseEmail(MemberDto dto) {
 		log.info("회원가입 시 email을 소문자로 변경");
 		dto.setEmail(dto.getEmail().toLowerCase());
 	}
 
-	private void validateDuplicateMember(String email) {
+	private boolean validateDuplicateMember(String email) {
 		List<Member> findMembers = memberRepository.findAllByEmail(email);
 		if (!findMembers.isEmpty()) {
-			throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+			return false;
+		}
+		else {
+			return true;
 		}
 	}
 
-	public MemberResponseDto findOne(Long id) {
-		Member member = memberRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+	@Transactional
+	public Long save(MemberDto memberDto){
 
-		return new MemberResponseDto(member);
+		makeLowerCaseEmail(memberDto);
+
+		Member member = memberDto.toEntity();
+
+		// 중복된 회원 있으면 회원가입 실패
+		if(!validateDuplicateMember(memberDto.getEmail())) {
+			return (long)-1;
+		}
+
+		member.encodingPassword(passwordEncoder.encode(member.getPassword()));
+
+		return memberRepository.save(member).getId();
 	}
+
+	@Transactional
+	public boolean login(MemberDto memberDto) {
+		Optional<Member> member = memberRepository.findByEmail(memberDto.getEmail());
+
+		// 로그인 이메일과 일치하는 회원 없으면 로그인 실패
+		if(member == null) {
+			return false;
+		}
+
+		// 암호화된 비밀번호 비교해서 다르면 로그인 실패
+		if(!passwordEncoder.matches(memberDto.getPassword(), member.get().getPassword())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private Collection<? extends GrantedAuthority> authorities(Role role) {
+		return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.toString()));
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Member member = memberRepository.findByEmail(email)
@@ -69,18 +100,7 @@ public class MemberService implements UserDetailsService {
 
 		return new User(member.getEmail(), member.getPassword(), authorities(member.getRole()));
 	}
-
-	private Collection<? extends GrantedAuthority> authorities(Role role) {
-		return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.toString()));
-	}
-
-
-	public MemberResponseDto findByEmail(String email) {
-		Member findMember = memberRepository.findByEmail(email)
-				.orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
-
-		return new MemberResponseDto(findMember);
-	}
-
 }
+
+
 
